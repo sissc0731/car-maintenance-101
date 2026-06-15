@@ -1,12 +1,33 @@
 const fs=require('fs'),path=require('path'),today=new Date().toISOString().slice(0,10),slug=today;
-const feed=JSON.parse(fs.readFileSync(path.join(__dirname,'..','feed.json'),'utf8'));
-if(feed.posts.find(p=>p.slug===slug)){console.log('Exists');process.exit(0)}
-const pool=[[["新车过了磨合期要不要拉高速","不需要！现代发动机出厂前已经磨合好了。正常开就行为什么要去飙车反而危险。拉高速这个说法是化油器时代的旧观念。","保养知识"],["机油多久换一次：别被4S店忽悠了","全合成机油10000公里或1年换一次、半合成7500公里或半年、矿物油5000公里。不用听4S店每5000公里就要换的说法。","机油保养"],["新手买车必看：10万15万25万各选什么","10万选国产SUV空间大配置高、15万选合资轿车（轩逸卡罗拉思域）保值率高、20万+选日系混动或德系品质感好。","买车指南"]],[["车险怎么买最划算：这4种险就够了","交强险（强制）+三者险（200万以上）+车损险+不计免赔。划痕险玻璃险之类的看个人需求但没必要买太全。","保险知识"],["等红灯挂P档还是N档：自动挡的正确操作","短红灯（30秒内）踩住刹车不用换档、长红灯（30秒以上）挂N档+拉手刹（或电子手刹）。不要挂P档被追尾会损坏变速箱。","驾驶技巧"],["轮胎的寿命到底有多久：耐磨度和时间","一般来说4-6年或者6-8万公里就该换了。花纹磨到磨损标记线就要马上换。胎侧有裂纹也要换。","轮胎保养"]],[["夏天开空调要不要热车","不用热车但可以先开窗通风排出热气再关窗开空调。auto模式下温度调到23-25度最省油。先开外循环几分钟再切内循环。","驾驶技巧"],["二手车选购攻略：怎么看事故车泡水车","查记录（VIN码查4S店记录和保险记录）、看缝隙（事故车覆盖件缝隙不均匀）、闻气味（泡水车有霉味）、掀地毯看有没有水渍泥沙。","买车指南"],["油耗为什么越来越高：8个可能的原因","胎压不足、火花塞老化、空气滤芯太脏、氧传感器不灵敏、积碳过多、空调开太多、开车习惯不好急加急刹。","省油技巧"]],[["怎么判断刹车片要换了","刹车时听到金属摩擦声就是刹车片到极限了。前刹车片一般4-6万公里换、后刹车片6-10万公里换。每次保养让师傅帮忙看厚度。","刹车保养"],["手动挡比自动挡省油吗","现在已经反过来了。CVT变速箱和双离合比手动挡更省油。手动挡省油的前提是你换挡时机非常精准不然油耗反而高。","省油技巧"],["车停在户外怎么防晒和保护","遮阳挡挡前挡风玻璃、用防晒车罩、停在树荫或建筑物阴影下。方向盘和换挡杆太烫可以垫块干毛巾。","保养知识"]],[["加油要不要加满：加到跳枪还是加半箱","加到跳枪就够了不用凑整。经常市区跑加半箱足够减轻重量能省一点油。长途出行还是加满放心。","省油技巧"],["新能源车和燃油车怎么选","有固定车位能装充电桩选电车最省钱（每公里不到1毛钱）。没有充电条件选混动（卡罗拉秦Plus）。经常跑长途选燃油车或增程式。","买车指南"],["自己洗车的方法：不要用洗衣粉","从车顶往下洗→车轮最后→用专用洗车液→两块海绵（一块洗车身一块洗车轮）→擦干要用纤维毛巾不留水痕。太阳下洗车水干太快会留水渍。","保养知识"]],[["雨天行车安全：这些操作能救命","车速降到平时的70%以下、和前车保持2倍以上安全距离、不要急打方向急刹车、积水路段跟着前车走如果水淹没半个车轮不要通过。","驾驶技巧"],["汽车空调有异味怎么处理","换空调滤芯+清洗蒸发器+空调管道除味。停车前3分钟关AC只开风扇吹干管道减少霉菌滋生。","保养知识"],["高速公路上爆胎怎么办","握紧方向盘不要猛打方向、不要急踩刹车、松开油门利用发动机制动减速、车速降到30以下轻踩刹车靠边停车、人员撤离到护栏外。","紧急处理"]],[["冬天开车前要不要热车","现在的电喷发动机不需要原地热车。启动后等10-20秒机油循环到位就可以慢慢开。在水温到正常温度前不要大脚油门就好。","驾驶技巧"],["汽车保养周期表：什么里程该做什么项目","每1万公里换机油机滤、每2万公里换空气滤芯和空调滤芯、每3万公里换汽油滤芯和火花塞、每6万公里换变速箱油、每10万公里换正时皮带。","保养知识"],["开了10万公里的车算不算老车","现代发动机正常保养开20万公里没问题。10万公里算是正当年。只要按时保养没有大事故再开5-10万公里都行。","保养知识"]]];
-const idx=(new Date().getDate()-1)%pool.length,items=pool[idx];
-const postTitle=items[0][2]+' | '+today;
-feed.posts.unshift({slug,date:today,title:postTitle,items:items.map(i=>({title:i[0],desc:i[1],tag:i[2]}))});
+const fp=path.join(__dirname,'..','feed.json');
+const feed=JSON.parse(fs.readFileSync(fp,'utf8'));
+if(!feed.posts)feed.posts=[];
+if(feed.posts.find(p=>p.slug===slug)){console.log('Already exists');process.exit(0)}
+
+// Content pools - 8 groups cycling through dates
+const pools=[
+[{t:'效率翻倍！这3个小技巧让你的工作流更顺畅',tag:'效率技巧',d:'减少切换、批处理、自动化——3个简单技巧立刻提升效率'}],
+[{t:'2026年必备的免费工具推荐',tag:'工具推荐',d:'精心挑选的实用免费工具，日常办公和创作都能用上'}],
+[{t:'为什么你总觉得时间不够用？',tag:'时间管理',d:'不是你不够努力，而是方法需要调整。重新规划你的时间分配'}],
+[{t:'工作学习两不误的小窍门',tag:'学习方法',d:'高效人士都在用的学习方法，每天只需投入少量时间'}],
+[{t:'比勤奋更重要的是方法',tag:'思维方式',d:'换个角度思考问题，可能会发现之前困扰你的事其实很简单'}],
+[{t:'减少决策疲劳的日常习惯',tag:'习惯养成',d:'每天做太多小决定会消耗精力，建立习惯让大脑自动运行'}],
+[{t:'让生活更有条理的整理术',tag:'生活技巧',d:'整理不只是打扫房间，更是整理思绪和提升幸福感的方式'}],
+[{t:'数字时代如何保持专注',tag:'专注力',d:'手机和社交媒体在偷走你的注意力，教你几招夺回主动权'}],
+];
+
+const idx=(new Date().getDate()-1)%pools.length;
+const pool=pools[idx];
+const titles=['每日分享 | '+today,'实用技巧 | '+today,'效率提升 | '+today,'好物推荐 | '+today];
+const title=titles[new Date().getDate()%titles.length];
+
+feed.posts.unshift({slug,date:today,title:title,items:pool});
 feed.updated=today;
-fs.writeFileSync(path.join(__dirname,'..','feed.json'),JSON.stringify(feed,null,2));
-const html='<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>'+postTitle+'</title><style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#fafafa;--card:#fff;--text:#1a1a2e;--t2:#666;--accent:#64748b;--border:#e5e7eb;--r:10px}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;background:var(--bg);color:var(--text);line-height:1.7}.container{max-width:800px;margin:0 auto;padding:0 20px}header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 0;margin-bottom:32px}header a{color:var(--accent);text-decoration:none;font-size:.9rem}header h1{font-size:1.3rem;margin-top:8px}.post{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px}.post .date{color:var(--t2);font-size:.8rem;margin-bottom:20px}.entry{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}.entry:last-child{border-bottom:none}.entry h3{font-size:1rem;margin-bottom:4px}.entry p{color:var(--t2);font-size:.9rem}.tag{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:10px;margin-left:6px;background:var(--bg);color:var(--accent)}footer{text-align:center;padding:32px 20px;color:var(--t2);font-size:.8rem}@media(max-width:600px){.post{padding:18px}}</style></head><body><header><div class="container"><a href="../index.html">← 首页</a><h1>'+postTitle+'</h1></div></header><main class="container"><article class="post"><div class="date">📅 '+today+'</div>'+items.map(i=>'<div class="entry"><h3>'+i[0]+' <span class="tag">'+i[2]+'</span></h3><p>'+i[1]+'</p></div>').join('')+'</article></main><footer><p>每日更新</p></footer></body></html>';
-fs.writeFileSync(path.join(__dirname,'..','posts',slug+'.html'),html);
-console.log('OK');
+fs.writeFileSync(fp,JSON.stringify(feed,null,2));
+
+// Create post HTML
+const dir=path.join(__dirname,'..','posts');
+if(!fs.existsSync(dir))fs.mkdirSync(dir,{recursive:true});
+const h=`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${title}</title><meta name="description" content="${pool.map(i=>i.t).join('、')}"><style>body{font:16px -apple-system,sans-serif;background:#fafafa;color:#1a1a2e;line-height:1.8;margin:0;padding:16px}.c{max-width:700px;margin:0 auto}article{background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}h1{font-size:1.3rem;margin:0 0 4px}.date{font-size:.8rem;color:#666;margin-bottom:20px}.item{margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #eee}.item h2{font-size:1rem;margin:0 0 4px}.item p{font-size:.88rem;color:#555}.tag{display:inline-block;background:#eff6ff;color:#2563eb;font-size:.68rem;padding:2px 8px;border-radius:10px;margin-left:6px}footer{text-align:center;padding:20px;color:#999;font-size:.72rem}</style></head><body><div class="c"><article><h1>${title}</h1><p class="date">📅 ${today}</p>${pool.map(i=>'<div class="item"><h2>'+i.t+' <span class="tag">'+i.tag+'</span></h2><p>'+i.d+'</p></div>').join('')}</article></div><footer>每日自动更新</footer></body></html>`;
+fs.writeFileSync(path.join(dir,slug+'.html'),h);
+console.log('Generated:',title);
